@@ -422,22 +422,86 @@
       margin-top: 10px;
       background: rgba(255, 255, 255, 0.06);
       border-radius: 999px;
-      overflow: hidden;
-      height: 14px;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+      overflow: visible;
+      height: 16px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0 0 1px rgba(239, 68, 68, 0.15);
+      position: relative;
+      padding: 2px;
     }
 
     .tilt-bar {
       height: 100%;
       width: 0%;
-      background: var(--green);
-      transition: width 0.35s ease, background 0.35s ease;
+      background: linear-gradient(90deg, #7f1d1d, #ef4444, #f97316);
+      transition: width 0.35s ease, background 0.35s ease, filter 0.35s ease;
+      border-radius: 999px;
+      box-shadow: 0 0 18px rgba(239, 68, 68, 0.55), 0 6px 18px rgba(0, 0, 0, 0.35);
     }
 
-    .color-green { background: var(--green); }
-    .color-yellow { background: var(--yellow); }
-    .color-orange { background: var(--orange); }
-    .color-red { background: var(--red); }
+    .color-green { filter: saturate(0.65) brightness(1.1); }
+    .color-yellow { filter: saturate(0.8) brightness(1.05); }
+    .color-orange { filter: saturate(0.95); }
+    .color-red { filter: saturate(1.2) brightness(1.05); }
+
+    .tilt-explosion {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: 999px;
+      mix-blend-mode: screen;
+      opacity: 0;
+    }
+
+    .tilt-explosion::before,
+    .tilt-explosion::after {
+      content: "";
+      position: absolute;
+      inset: -18px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.8), rgba(239, 68, 68, 0.7) 45%, transparent 70%);
+      transform: scale(0.5);
+      opacity: 0;
+    }
+
+    .tilt-explosion::after {
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.75), rgba(249, 115, 22, 0.75) 35%, transparent 70%);
+      filter: blur(2px);
+    }
+
+    .tilt-track.boom .tilt-explosion {
+      animation: pop 0.55s ease forwards;
+    }
+
+    .tilt-track.boom .tilt-explosion::before,
+    .tilt-track.boom .tilt-explosion::after {
+      animation: shockwave 0.6s ease forwards;
+    }
+
+    .tilt-track.boom {
+      animation: shake 0.4s ease-in-out 0.05s;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0 0 1px rgba(239, 68, 68, 0.4), 0 0 20px rgba(239, 68, 68, 0.4);
+    }
+
+    @keyframes pop {
+      0% { opacity: 0; }
+      20% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    @keyframes shockwave {
+      0% { transform: scale(0.4); opacity: 0.8; }
+      70% { opacity: 0.6; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      20% { transform: translateX(-2px); }
+      40% { transform: translateX(3px); }
+      60% { transform: translateX(-3px); }
+      80% { transform: translateX(2px); }
+      100% { transform: translateX(0); }
+    }
 
     .action-btn {
       background: rgba(65, 169, 255, 0.16);
@@ -573,8 +637,9 @@
               <div class="tilt-label" id="tiltLabel">Zen Gamer</div>
               <div class="tilt-score" id="tiltScore">Din score: 0/20</div>
               <p class="tilt-desc" id="tiltDescription"></p>
-              <div class="tilt-track" aria-hidden="true">
+              <div class="tilt-track" id="tiltTrack" aria-hidden="true">
                 <div class="tilt-bar" id="tiltBar"></div>
+                <div class="tilt-explosion" id="tiltExplosion"></div>
               </div>
             </div>
           </div>
@@ -694,7 +759,9 @@
     const tiltLabel = document.getElementById("tiltLabel");
     const tiltScore = document.getElementById("tiltScore");
     const tiltDescription = document.getElementById("tiltDescription");
+    const tiltTrack = document.getElementById("tiltTrack");
     const tiltBar = document.getElementById("tiltBar");
+    const tiltExplosion = document.getElementById("tiltExplosion");
     const resultText = document.getElementById("resultText");
     const resultImage = document.getElementById("resultImage");
     const resultStamp = document.getElementById("resultStamp");
@@ -715,7 +782,7 @@
     const categoryVisuals = {
       green: {
         stamp: "ZEN",
-        image: "https://images.unsplash.com/photo-1606117330587-0d9c1dc9b355?auto=format&fit=crop&w=1200&q=80",
+        image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80",
         quote: "“GG WP” – dig, efter at have /mute all siden champ select."
       },
       yellow: {
@@ -730,7 +797,7 @@
       },
       red: {
         stamp: "MALD",
-        image: "https://images.unsplash.com/photo-1505761671935-60b3a7427bad?auto=format&fit=crop&w=1200&q=80",
+        image: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=1200&q=80",
         quote: "“All jungle diff” – og din cat spiller måske bedre."
       }
     };
@@ -834,6 +901,12 @@
       const width = Math.min((totalScore / maxScore) * 100, 100);
       tiltBar.style.width = `${width}%`;
 
+      tiltTrack.classList.toggle("boom", totalScore >= maxScore);
+      if (totalScore >= maxScore) {
+        tiltExplosion.getAnimations().forEach((anim) => anim.cancel());
+        void tiltExplosion.offsetWidth;
+      }
+
       resultSection.classList.remove("hidden");
     }
 
@@ -842,6 +915,7 @@
       currentQuestion = 0;
       tiltBar.style.width = "0%";
       tiltBar.className = "tilt-bar";
+      tiltTrack.classList.remove("boom");
       startSection.classList.remove("hidden");
       quizSection.classList.add("hidden");
       resultSection.classList.add("hidden");
