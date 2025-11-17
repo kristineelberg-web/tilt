@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How tilted are you?</title>
+  <style>
+    :root {
+      --bg: #0b0815;
+      --card: #130d24;
+      --card-glow: rgba(255, 71, 207, 0.12);
+      --accent: #ff47cf;
+      --accent-2: #7cf5ff;
+      --accent-3: #a78bfa;
+      --text: #f6edff;
+      --muted: #c4b8d8;
+      --green: #22c55e;
+      --yellow: #facc15;
+      --orange: #fb923c;
+      --red: #ef4444;
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      --glass: rgba(255, 255, 255, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at 16% 24%, rgba(255, 71, 207, 0.18), transparent 32%),
+        radial-gradient(circle at 84% 10%, rgba(124, 245, 255, 0.16), transparent 30%),
+        radial-gradient(circle at 12% 82%, rgba(102, 78, 255, 0.2), transparent 30%),
+        radial-gradient(circle at 80% 80%, rgba(255, 193, 59, 0.12), transparent 28%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px 42px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    body::before,
+    body::after,
+    body::backdrop {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at 30% 40%, rgba(65, 169, 255, 0.14), transparent 28%),
+        radial-gradient(circle at 85% 30%, rgba(200, 170, 110, 0.16), transparent 26%);
+      mix-blend-mode: screen;
+      filter: blur(32px);
+      z-index: 0;
+    }
+
+    body::after {
+      background: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0, rgba(255, 255, 255, 0.04) 1px, transparent 1px, transparent 12px);
+      opacity: 0.2;
+      filter: none;
+    }
+
+    .ambient-orb {
+      position: absolute;
+      filter: blur(30px);
+      opacity: 0.55;
+      mix-blend-mode: screen;
+      z-index: 0;
+      animation: float 8s ease-in-out infinite;
+    }
+
+    .orb-1 { width: 220px; height: 220px; background: rgba(255, 71, 207, 0.4); top: 5%; left: 8%; }
+    .orb-2 { width: 260px; height: 260px; background: rgba(124, 245, 255, 0.35); bottom: 10%; right: 8%; animation-delay: 2s; }
+    .orb-3 { width: 180px; height: 180px; background: rgba(167, 139, 250, 0.32); bottom: 25%; left: 18%; animation-delay: 1s; }
+
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px) translateX(6px); }
+      100% { transform: translateY(0); }
+    }
+
+    .app {
+      position: relative;
+      width: min(980px, 100%);
+      background: linear-gradient(145deg, rgba(19, 13, 36, 0.95), rgba(14, 10, 28, 0.96));
+      border-radius: 22px;
+      box-shadow: var(--shadow), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      overflow: hidden;
+      z-index: 1;
+      border: 1px solid rgba(255, 71, 207, 0.35);
+    }
+
+    .app::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(120deg, rgba(255, 71, 207, 0.1), transparent 40%),
+        linear-gradient(300deg, rgba(124, 245, 255, 0.08), transparent 50%);
+      z-index: 0;
+    }
+
+    .shimmer-line {
+      position: absolute;
+      top: 0;
+      left: -50%;
+      width: 50%;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.32), transparent);
+      animation: sweep 5s linear infinite;
+      opacity: 0.5;
+    }
+
+    @keyframes sweep {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(200%); }
+    }
+
+    header {
+      padding: 32px 28px 12px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(65, 169, 255, 0.08), transparent);
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(65, 169, 255, 0.14), rgba(200, 170, 110, 0.1));
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .hero-art {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(5, 7, 15, 0.5), rgba(5, 7, 15, 0.9)),
+        url("https://i.kym-cdn.com/photos/images/newsfeed/002/617/205/8b3.jpg") center/cover;
+      opacity: 0.2;
+      z-index: 0;
+      filter: saturate(1.2);
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: clamp(30px, 4.4vw, 42px);
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    .tagline {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      background: rgba(255, 71, 207, 0.1);
+      color: var(--accent);
+      border: 1px solid rgba(255, 71, 207, 0.35);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      margin-top: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    header p {
+      margin: 14px auto 0;
+      max-width: 720px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    .meme-strip {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 14px auto 6px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .meme-chip {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 8px 10px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 13px;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+      transform: rotate(calc(-3deg + 6deg * var(--i)));
+    }
+
+    main {
+      padding: 12px 24px 28px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(23, 16, 46, 0.9), rgba(17, 12, 32, 0.8));
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 15px 40px var(--card-glow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(120deg, rgba(255, 71, 207, 0.12), transparent 40%);
+      opacity: 0.3;
+    }
+
+    .start-card {
+      background: linear-gradient(180deg, rgba(11, 7, 20, 0.9), rgba(14, 10, 24, 0.8)),
+        url("https://images.unsplash.com/photo-1550747541-6b3e6a77ae4a?auto=format&fit=crop&w=1600&q=80") center/cover;
+      border: 1px solid rgba(255, 71, 207, 0.35);
+    }
+
+    .start-card::after {
+      background: linear-gradient(120deg, rgba(255, 71, 207, 0.22), transparent 50%);
+    }
+
+    .corner-emote {
+      position: absolute;
+      width: 76px;
+      height: 76px;
+      top: -10px;
+      right: 10px;
+      opacity: 0.8;
+      filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.35));
+      transform: rotate(6deg);
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .start-btn,
+    .answer-btn,
+    .action-btn {
+      border: none;
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease, border-color 0.2s ease;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+
+    .start-btn {
+      background: linear-gradient(120deg, #ff47cf, #a855f7, #7cf5ff);
+      color: #0b0815;
+      min-width: 220px;
+      box-shadow: 0 18px 40px rgba(255, 71, 207, 0.35);
+      border: 1px solid rgba(255, 71, 207, 0.35);
+      text-transform: uppercase;
+    }
+
+    .start-btn:hover,
+    .action-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 25px rgba(255, 71, 207, 0.25);
+    }
+
+    .answer-btn {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      text-align: left;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .answer-btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, rgba(255, 71, 207, 0.18), transparent 40%);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .answer-btn span {
+      position: relative;
+      z-index: 1;
+    }
+
+    .answer-btn:hover {
+      background: rgba(255, 71, 207, 0.14);
+      border-color: rgba(255, 71, 207, 0.45);
+      transform: translateY(-1px);
+      box-shadow: 0 15px 32px rgba(255, 71, 207, 0.2);
+      color: #0b0815;
+    }
+
+    .answer-btn:hover::before {
+      opacity: 1;
+    }
+
+    .answer-btn:active {
+      transform: translateY(0);
+      background: rgba(65, 169, 255, 0.2);
+    }
+
+    .stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .question-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 14px;
+      gap: 14px;
+    }
+
+    .meta-pill {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255, 71, 207, 0.12);
+      border: 1px solid rgba(255, 71, 207, 0.4);
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+    }
+
+    .question-text {
+      font-size: clamp(18px, 3vw, 23px);
+      margin: 0 0 18px;
+      line-height: 1.5;
+    }
+
+    .nav-row {
+      margin-top: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .reaction-layer {
+      position: relative;
+      height: 0;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    .reaction-bubble {
+      position: absolute;
+      right: 10px;
+      top: -6px;
+      padding: 8px 12px;
+      border-radius: 12px;
+      background: linear-gradient(120deg, rgba(255, 71, 207, 0.85), rgba(124, 245, 255, 0.85));
+      color: #0b0815;
+      font-weight: 800;
+      font-size: 13px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+      transform: translateY(0) scale(0.92);
+      animation: floatPop 1s ease forwards;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      white-space: nowrap;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 999px;
+      overflow: hidden;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ff47cf, #a855f7, #7cf5ff);
+      transition: width 0.25s ease;
+    }
+
+    @keyframes floatPop {
+      0% {
+        opacity: 0;
+        transform: translateY(10px) scale(0.8);
+      }
+      50% {
+        opacity: 1;
+        transform: translateY(-6px) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-16px) scale(0.98);
+      }
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .result {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+
+    .result h2 {
+      margin: 0 0 6px;
+      letter-spacing: 0.4px;
+    }
+
+    .tilt-box {
+      background: radial-gradient(circle at 20% 20%, rgba(65, 169, 255, 0.08), transparent 45%), rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 16px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .tilt-score {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .tilt-label {
+      font-weight: 800;
+      font-size: 19px;
+      letter-spacing: 0.5px;
+    }
+
+    .tilt-desc {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .tilt-track {
+      margin-top: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 999px;
+      overflow: visible;
+      height: 16px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0 0 1px rgba(239, 68, 68, 0.15);
+      position: relative;
+      padding: 2px;
+    }
+
+    .tilt-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #7f1d1d, #ef4444, #f97316);
+      transition: width 0.35s ease, background 0.35s ease, filter 0.35s ease, box-shadow 0.35s ease;
+      border-radius: 999px;
+      box-shadow: 0 0 18px rgba(239, 68, 68, 0.55), 0 6px 18px rgba(0, 0, 0, 0.35);
+    }
+
+    .tilt-bar.live {
+      background: linear-gradient(120deg, #7f1d1d, #dc2626, #ef4444, #f97316);
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.6), 0 0 30px rgba(248, 113, 113, 0.25);
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+
+    .tilt-track.live {
+      margin-top: 14px;
+      height: 14px;
+      padding: 2px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0 0 1px rgba(239, 68, 68, 0.28), 0 0 16px rgba(239, 68, 68, 0.2);
+    }
+
+    .color-green { filter: saturate(0.65) brightness(1.1); }
+    .color-yellow { filter: saturate(0.8) brightness(1.05); }
+    .color-orange { filter: saturate(0.95); }
+    .color-red { filter: saturate(1.2) brightness(1.05); }
+
+    .tilt-explosion {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      border-radius: 999px;
+      mix-blend-mode: screen;
+      opacity: 0;
+    }
+
+    .tilt-explosion::before,
+    .tilt-explosion::after {
+      content: "";
+      position: absolute;
+      inset: -18px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.8), rgba(239, 68, 68, 0.7) 45%, transparent 70%);
+      transform: scale(0.5);
+      opacity: 0;
+    }
+
+    .tilt-explosion::after {
+      background: radial-gradient(circle, rgba(255, 255, 255, 0.75), rgba(249, 115, 22, 0.75) 35%, transparent 70%);
+      filter: blur(2px);
+    }
+
+    .tilt-track.boom .tilt-explosion {
+      animation: pop 0.55s ease forwards;
+    }
+
+    .tilt-track.boom .tilt-explosion::before,
+    .tilt-track.boom .tilt-explosion::after {
+      animation: shockwave 0.6s ease forwards;
+    }
+
+    .tilt-track.boom {
+      animation: shake 0.4s ease-in-out 0.05s;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0 0 1px rgba(239, 68, 68, 0.4), 0 0 20px rgba(239, 68, 68, 0.4);
+    }
+
+    @keyframes pop {
+      0% { opacity: 0; }
+      20% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    @keyframes shockwave {
+      0% { transform: scale(0.4); opacity: 0.8; }
+      70% { opacity: 0.6; }
+      100% { transform: scale(1.6); opacity: 0; }
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      20% { transform: translateX(-2px); }
+      40% { transform: translateX(3px); }
+      60% { transform: translateX(-3px); }
+      80% { transform: translateX(2px); }
+      100% { transform: translateX(0); }
+    }
+
+    @keyframes pulse {
+      0%,
+      100% {
+        filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.4));
+      }
+      50% {
+        filter: drop-shadow(0 0 10px rgba(248, 113, 113, 0.7));
+      }
+    }
+
+    .action-btn {
+      background: rgba(65, 169, 255, 0.16);
+      color: #fff;
+      border: 1px solid rgba(65, 169, 255, 0.35);
+      padding-inline: 18px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+
+    .result-visual {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+      background: var(--glass);
+    }
+
+    .result-visual img {
+      width: 100%;
+      display: block;
+      object-fit: cover;
+      height: 180px;
+      filter: saturate(1.2);
+    }
+
+    .result-visual .stamp {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(5, 7, 15, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .meme-caption {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      bottom: 8px;
+      background: linear-gradient(90deg, rgba(5, 7, 15, 0.8), rgba(5, 7, 15, 0.65));
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      text-align: center;
+      color: #f8fafc;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    }
+
+    .quote-box {
+      margin-top: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 12px;
+      padding: 12px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: #dbeafe;
+      font-weight: 600;
+      line-height: 1.5;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    footer {
+      text-align: center;
+      padding: 0 0 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 520px) {
+      main {
+        padding: 0 16px 20px;
+      }
+
+      .card {
+        padding: 18px;
+      }
+
+      .nav-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-orb orb-1"></div>
+  <div class="ambient-orb orb-2"></div>
+  <div class="ambient-orb orb-3"></div>
+  <div class="app">
+    <div class="shimmer-line" aria-hidden="true"></div>
+    <header>
+      <div class="hero-art" aria-hidden="true"></div>
+      <h1>How tilted are you?</h1>
+      <div class="tagline" aria-hidden="true">
+        <span>Rift Ready</span>
+        <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--accent);"></span>
+        <span>Tilt Check</span>
+      </div>
+      <div class="meme-strip" aria-hidden="true">
+        <span class="meme-chip" style="--i: 0">jung diff</span>
+        <span class="meme-chip" style="--i: 1">copium cloud</span>
+        <span class="meme-chip" style="--i: 2">/mute all tech</span>
+        <span class="meme-chip" style="--i: 3">FF? never.</span>
+      </div>
+      <p>
+        Tag den uvidenskabelige, men 100% præcise tilt-test inspireret af League’s Rift – nu i neon meme-mode. Svar
+        ærligt, og se om du er en zen-legende, en mildt tiltet soloq grinder eller på direkte vej mod Danger Zone. Klik
+        på et svar for at hoppe videre, og nyd copium-boblerne på vejen.
+      </p>
+    </header>
+    <main>
+      <section id="start" class="card center start-card">
+        <img src="https://static.wikia.nocookie.net/leagueoflegends/images/7/7c/Poro_Sad_Emote.png" alt="Sad poro emote" class="corner-emote" />
+        <h2>Er du klar til et Rift mood-check?</h2>
+        <p style="color: var(--muted); margin: 8px 0 18px;">
+          11 hurtige spørgsmål – ingen data gemmes, kun sjov. Få din tilt-rang og se om du er klar til næste solo queue.
+        </p>
+        <button class="start-btn" id="startBtn">Start quiz</button>
+      </section>
+
+      <section id="quiz" class="card hidden" aria-live="polite">
+        <div class="question-meta">
+          <span class="meta-pill">Summoner check</span>
+          <span id="progressText">Spørgsmål 1 af 11</span>
+          <div class="progress-track" aria-hidden="true">
+            <div class="progress-bar" id="questionProgress"></div>
+          </div>
+        </div>
+        <h2 id="questionText" class="question-text"></h2>
+        <div id="answers" class="stack" role="group" aria-label="Svarmuligheder"></div>
+        <div class="nav-row">
+          <span id="helperText">Lock dit valg og hop videre.</span>
+          <span id="scorePreview">Score: 0</span>
+        </div>
+        <div class="tilt-box" style="margin-top: 12px;">
+          <div class="tilt-label">Live tilt-meter</div>
+          <div class="tilt-score">Følg din vrede bar i realtime</div>
+          <div class="tilt-track live" id="liveTiltTrack" aria-hidden="true">
+            <div class="tilt-bar live" id="liveTiltBar"></div>
+          </div>
+        </div>
+        <div class="reaction-layer" id="reactionLayer" aria-hidden="true"></div>
+      </section>
+
+      <section id="result" class="card hidden">
+        <div class="result">
+          <div>
+            <h2>Din tilt-status</h2>
+              <div class="tilt-box">
+                <div class="tilt-label" id="tiltLabel">Zen Gamer</div>
+              <div class="tilt-score" id="tiltScore">Din score: 0/22</div>
+              <p class="tilt-desc" id="tiltDescription"></p>
+              <div class="tilt-track" id="tiltTrack" aria-hidden="true">
+                <div class="tilt-bar" id="tiltBar"></div>
+                <div class="tilt-explosion" id="tiltExplosion"></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h2>Efter kampen</h2>
+            <div class="result-visual">
+              <img id="resultImage" src="https://i.kym-cdn.com/photos/images/newsfeed/002/582/281/9a0.jpg" alt="Zen gamer" />
+              <div class="stamp" id="resultStamp">ZEN AF</div>
+              <div class="meme-caption" id="memeCaption">inner peace unlocked</div>
+            </div>
+            <div class="quote-box" id="resultQuote">“Jeg muted all og fik pludselig 200 IQ.” – Dig, meditationsmusik i baggrunden.</div>
+            <p class="tilt-desc" id="resultText">
+              Du er rolig, tager tingene afslappet og lader ikke tilt styre dine valg.
+            </p>
+            <button class="action-btn" id="retryBtn">Tag testen igen</button>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer>Bygget i ren HTML, CSS og JavaScript – ingen eksterne frameworks.</footer>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        text: "Din duo int’er level 1. Hvad gør du?",
+        answers: [
+          { text: "Griner og skriver 'its fine'", points: 0 },
+          { text: "Sukker, men spiller videre", points: 1 },
+          { text: "Pinger ham 10 gange og skriver i all chat", points: 2 }
+        ]
+      },
+      {
+        text: "Når du taber en kamp, gør du oftest:",
+        answers: [
+          { text: "Lukker spillet og laver noget andet", points: 0 },
+          { text: "Tager én mere for at vinde LP tilbage", points: 1 },
+          { text: "Spiller 5 games mere selvom du allerede er sur", points: 2 }
+        ]
+      },
+      {
+        text: "Din ping er 120 i ranked:",
+        answers: [
+          { text: "Skifter til noget andet end ranked", points: 0 },
+          { text: "Brokker dig lidt, men spiller videre", points: 1 },
+          { text: "Skyder skylden på internet, Riot og dine teammates", points: 2 }
+        ]
+      },
+      {
+        text: "En teammate skriver ‘report jungler’ efter første dødsfald:",
+        answers: [
+          { text: "Ignorerer chatten", points: 0 },
+          { text: "Øjnene ruller, men du svarer ikke", points: 1 },
+          { text: "Går i fuld debat-mode i chatten", points: 2 }
+        ]
+      },
+      {
+        text: "Hvor ofte alt-tabber du surt ud af et spil?",
+        answers: [
+          { text: "Næsten aldrig", points: 0 },
+          { text: "En gang imellem", points: 1 },
+          { text: "Meget tit", points: 2 }
+        ]
+      },
+      {
+        text: "Når du laver en fejl selv:",
+        answers: [
+          { text: "Griner af det og prøver igen", points: 0 },
+          { text: "Bliver lidt irriteret på dig selv", points: 1 },
+          { text: "Bliver sur og tænker på det resten af spillet", points: 2 }
+        ]
+      },
+      {
+        text: "Hvis en ven int’er i normals:",
+        answers: [
+          { text: "Det er bare sjov, ligegyldigt", points: 0 },
+          { text: "Du driller dem lidt", points: 1 },
+          { text: "Du er oprigtigt irriteret", points: 2 }
+        ]
+      },
+      {
+        text: "Hvordan har du det efter en hård loss-streak?",
+        answers: [
+          { text: "Jeg lukker ned og finder noget afslappende at lave", points: 0 },
+          { text: "Jeg er lidt sur men det går over", points: 1 },
+          { text: "Jeg er pissed og tænker på det i lang tid", points: 2 }
+        ]
+      },
+      {
+        text: "Din duo skriver 'lag' men står 0/7/2 Yasuo:",
+        answers: [
+          { text: "Jeg sender et heart emote og går videre", points: 0 },
+          { text: "Jeg smider et '???' ping men prøver at scale", points: 1 },
+          { text: "Jeg streamer det til vennerne som live comedy", points: 2 }
+        ]
+      },
+      {
+        text: "Hvilket champ-pick får dit øje til at twitche?",
+        answers: [
+          { text: "Ingen – jeg er stoisk", points: 0 },
+          { text: "Teemo top giver mig micro-tilt", points: 1 },
+          { text: "Instalock Yasuo mid = instant mald", points: 2 }
+        ]
+      },
+      {
+        text: "Coach-vennen siger 'just ward better':",
+        answers: [
+          { text: "Jeg griner og køber en pink", points: 0 },
+          { text: "Jeg mumler noget om support diff", points: 1 },
+          { text: "Jeg tilter og spammer pings ved næste brush", points: 2 }
+        ]
+      }
+    ];
+
+    const startSection = document.getElementById("start");
+    const quizSection = document.getElementById("quiz");
+    const resultSection = document.getElementById("result");
+    const startBtn = document.getElementById("startBtn");
+    const retryBtn = document.getElementById("retryBtn");
+    const questionText = document.getElementById("questionText");
+    const answersContainer = document.getElementById("answers");
+    const progressText = document.getElementById("progressText");
+    const questionProgress = document.getElementById("questionProgress");
+    const scorePreview = document.getElementById("scorePreview");
+    const helperText = document.getElementById("helperText");
+    const liveTiltBar = document.getElementById("liveTiltBar");
+    const liveTiltTrack = document.getElementById("liveTiltTrack");
+    const tiltLabel = document.getElementById("tiltLabel");
+    const tiltScore = document.getElementById("tiltScore");
+    const tiltDescription = document.getElementById("tiltDescription");
+    const tiltTrack = document.getElementById("tiltTrack");
+    const tiltBar = document.getElementById("tiltBar");
+    const tiltExplosion = document.getElementById("tiltExplosion");
+    const resultText = document.getElementById("resultText");
+    const resultImage = document.getElementById("resultImage");
+    const resultStamp = document.getElementById("resultStamp");
+    const resultQuote = document.getElementById("resultQuote");
+    const memeCaption = document.getElementById("memeCaption");
+    const reactionLayer = document.getElementById("reactionLayer");
+
+    let currentQuestion = 0;
+    let totalScore = 0;
+    const maxScore = questions.length * 2;
+
+    const helperMessages = [
+      "Pro tip: /mute all er self-care.",
+      "Meme det eller dream det – vælg et svar!",
+      "Husk at strække fingrene – ingen int clicks.",
+      "Hvis du hover surrender, tænk på LP-tab...",
+      "Spam et dans-emote for RNG-luck!",
+      "Lad være med at tilt-q, du er bedre end det."
+    ];
+
+    const reactionTexts = {
+      0: ["ZEN", "cooldown gamer", "breathing.exe"],
+      1: ["copium sips", "ok ok focus", "cope & carry"],
+      2: ["MALDING!", "keyboard smash", "tilt.exe"],
+    };
+
+    const categoryVisuals = {
+      green: {
+        stamp: "ZEN MODE",
+        caption: "inner peace unlock",
+        image: "https://i.kym-cdn.com/photos/images/newsfeed/002/582/281/9a0.jpg",
+        quote: "“Muted all, tændte lofi – instant brain buff.” – Dig, ca. 3 sek siden."
+      },
+      yellow: {
+        stamp: "COPIUM",
+        caption: "just one more",
+        image: "https://i.kym-cdn.com/photos/images/newsfeed/001/208/736/a88.jpg",
+        quote: "“Jeg kan stoppe når som helst.” – sagde du også i går, og i forgårs."
+      },
+      orange: {
+        stamp: "COPE FLIP",
+        caption: "facepalm gaming",
+        image: "https://i.kym-cdn.com/photos/images/newsfeed/002/407/250/7b0.jpg",
+        quote: "“Team diff” – sagde du, sekundet før du missclicker flash.”"
+      },
+      red: {
+        stamp: "OMEGA TILT",
+        caption: "keyboard smash",
+        image: "https://i.kym-cdn.com/photos/images/newsfeed/002/517/936/c1b.jpg",
+        quote: "“Alt er jung diff!” – du, mens tastaturet er i hopla-mode."
+      }
+    };
+
+    function startQuiz() {
+      currentQuestion = 0;
+      totalScore = 0;
+      scorePreview.textContent = "Score: 0";
+      startSection.classList.add("hidden");
+      resultSection.classList.add("hidden");
+      quizSection.classList.remove("hidden");
+      updateLiveTilt();
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const question = questions[currentQuestion];
+      questionText.textContent = question.text;
+      progressText.textContent = `Spørgsmål ${currentQuestion + 1} af ${questions.length}`;
+      const progressPercent = ((currentQuestion) / questions.length) * 100;
+      questionProgress.style.width = `${progressPercent}%`;
+      helperText.textContent = helperMessages[currentQuestion % helperMessages.length];
+
+      answersContainer.innerHTML = "";
+      question.answers.forEach((answer, index) => {
+        const button = document.createElement("button");
+        button.className = "answer-btn";
+        button.type = "button";
+        const label = document.createElement("span");
+        label.textContent = answer.text;
+        button.appendChild(label);
+        button.setAttribute("data-points", answer.points);
+        button.setAttribute("aria-label", `${answer.text} (${answer.points} point)`);
+        button.addEventListener("click", () => handleAnswer(answer.points));
+        button.style.transitionDelay = `${index * 20}ms`;
+        answersContainer.appendChild(button);
+      });
+    }
+
+    function spawnReaction(points) {
+      if (!reactionLayer) return;
+      const bucket = reactionTexts[Math.min(2, Math.max(0, points))] || [];
+      if (!bucket.length) return;
+
+      const bubble = document.createElement("div");
+      bubble.className = "reaction-bubble";
+      bubble.textContent = bucket[Math.floor(Math.random() * bucket.length)];
+      bubble.style.right = `${10 + Math.random() * 60}px`;
+      bubble.style.transform = `translateY(0) scale(0.92) rotate(${Math.random() * 6 - 3}deg)`;
+      reactionLayer.appendChild(bubble);
+      bubble.addEventListener("animationend", () => bubble.remove());
+    }
+
+    function handleAnswer(points) {
+      totalScore += points;
+      scorePreview.textContent = `Score: ${totalScore}`;
+      spawnReaction(points);
+      updateLiveTilt();
+      const nextQuestion = currentQuestion + 1;
+
+      if (nextQuestion < questions.length) {
+        currentQuestion = nextQuestion;
+        renderQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function getTiltCategory(score) {
+      if (score <= 7) {
+        return {
+          label: "Zen Gamer",
+          desc: "Du er rolig, tager tingene afslappet og lader ikke tilt styre dine valg.",
+          color: "green"
+        };
+      }
+      if (score <= 13) {
+        return {
+          label: "Mildt tiltet",
+          desc: "Du bliver påvirket, men kan stadig styre det. En pause i ny og næ ville ikke skade.",
+          color: "yellow"
+        };
+      }
+      if (score <= 17) {
+        return {
+          label: "Perma-tiltet",
+          desc: "Du tager tingene personligt, og dine nerver er lidt på kanten. Overvej at logge ud og trække vejret.",
+          color: "orange"
+        };
+      }
+      return {
+        label: "Danger Zone",
+        desc: "Alt er jungle diff, og verden er imod dig. Du burde nok røre lidt græs.",
+        color: "red"
+      };
+    }
+
+    function showResult() {
+      quizSection.classList.add("hidden");
+      const progressPercent = 100;
+      questionProgress.style.width = `${progressPercent}%`;
+
+      const category = getTiltCategory(totalScore);
+      tiltLabel.textContent = category.label;
+      tiltScore.textContent = `Din score: ${totalScore}/${maxScore}`;
+      tiltDescription.textContent = category.desc;
+      resultText.textContent = category.desc;
+
+      const visual = categoryVisuals[category.color];
+      if (visual) {
+        resultImage.src = visual.image;
+        resultImage.alt = `${category.label} vibe art`;
+        resultStamp.textContent = visual.stamp;
+        resultQuote.textContent = visual.quote;
+        memeCaption.textContent = visual.caption || category.label;
+      }
+
+      tiltBar.className = `tilt-bar color-${category.color}`;
+      const width = Math.min((totalScore / maxScore) * 100, 100);
+      tiltBar.style.width = `${width}%`;
+
+      tiltTrack.classList.toggle("boom", totalScore >= maxScore);
+      if (totalScore >= maxScore) {
+        tiltExplosion.getAnimations().forEach((anim) => anim.cancel());
+        void tiltExplosion.offsetWidth;
+      }
+
+      resultSection.classList.remove("hidden");
+    }
+
+    function resetQuiz() {
+      totalScore = 0;
+      currentQuestion = 0;
+      tiltBar.style.width = "0%";
+      tiltBar.className = "tilt-bar";
+      tiltTrack.classList.remove("boom");
+      startSection.classList.remove("hidden");
+      quizSection.classList.add("hidden");
+      resultSection.classList.add("hidden");
+      updateLiveTilt();
+    }
+
+    function updateLiveTilt() {
+      if (!liveTiltBar) return;
+      const width = Math.min((totalScore / maxScore) * 100, 100);
+      liveTiltBar.style.width = `${width}%`;
+      liveTiltBar.style.filter = `saturate(${1 + width / 120}) brightness(${1 + width / 220})`;
+      liveTiltTrack.classList.toggle("boom", totalScore >= maxScore);
+    }
+
+    startBtn.addEventListener("click", startQuiz);
+    retryBtn.addEventListener("click", resetQuiz);
+  </script>
+</body>
+</html>
