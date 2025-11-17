@@ -6,20 +6,20 @@
   <title>How tilted are you?</title>
   <style>
     :root {
-      --bg: #05070f;
-      --card: #0b1020;
-      --card-glow: rgba(65, 143, 255, 0.12);
-      --accent: #41a9ff;
-      --accent-2: #c8aa6e;
-      --accent-3: #6ee7ff;
-      --text: #e7edf7;
-      --muted: #9db2ce;
+      --bg: #0b0815;
+      --card: #130d24;
+      --card-glow: rgba(255, 71, 207, 0.12);
+      --accent: #ff47cf;
+      --accent-2: #7cf5ff;
+      --accent-3: #a78bfa;
+      --text: #f6edff;
+      --muted: #c4b8d8;
       --green: #22c55e;
       --yellow: #facc15;
       --orange: #fb923c;
       --red: #ef4444;
-      --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
-      --glass: rgba(255, 255, 255, 0.05);
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      --glass: rgba(255, 255, 255, 0.06);
     }
 
     * {
@@ -29,9 +29,10 @@
     body {
       margin: 0;
       font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
-      background: radial-gradient(circle at 20% 20%, rgba(65, 169, 255, 0.16), transparent 35%),
-        radial-gradient(circle at 75% 0%, rgba(200, 170, 110, 0.2), transparent 30%),
-        radial-gradient(circle at 10% 80%, rgba(76, 29, 149, 0.18), transparent 30%),
+      background: radial-gradient(circle at 16% 24%, rgba(255, 71, 207, 0.18), transparent 32%),
+        radial-gradient(circle at 84% 10%, rgba(124, 245, 255, 0.16), transparent 30%),
+        radial-gradient(circle at 12% 82%, rgba(102, 78, 255, 0.2), transparent 30%),
+        radial-gradient(circle at 80% 80%, rgba(255, 193, 59, 0.12), transparent 28%),
         var(--bg);
       color: var(--text);
       min-height: 100vh;
@@ -72,9 +73,9 @@
       animation: float 8s ease-in-out infinite;
     }
 
-    .orb-1 { width: 220px; height: 220px; background: rgba(65, 169, 255, 0.4); top: 5%; left: 8%; }
-    .orb-2 { width: 260px; height: 260px; background: rgba(236, 72, 153, 0.35); bottom: 10%; right: 8%; animation-delay: 2s; }
-    .orb-3 { width: 180px; height: 180px; background: rgba(200, 170, 110, 0.35); bottom: 25%; left: 18%; animation-delay: 1s; }
+    .orb-1 { width: 220px; height: 220px; background: rgba(255, 71, 207, 0.4); top: 5%; left: 8%; }
+    .orb-2 { width: 260px; height: 260px; background: rgba(124, 245, 255, 0.35); bottom: 10%; right: 8%; animation-delay: 2s; }
+    .orb-3 { width: 180px; height: 180px; background: rgba(167, 139, 250, 0.32); bottom: 25%; left: 18%; animation-delay: 1s; }
 
     @keyframes float {
       0% { transform: translateY(0); }
@@ -85,12 +86,12 @@
     .app {
       position: relative;
       width: min(980px, 100%);
-      background: linear-gradient(145deg, rgba(11, 16, 32, 0.94), rgba(8, 12, 24, 0.96));
+      background: linear-gradient(145deg, rgba(19, 13, 36, 0.95), rgba(14, 10, 28, 0.96));
       border-radius: 22px;
-      box-shadow: var(--shadow), 0 0 0 1px rgba(255, 255, 255, 0.04);
+      box-shadow: var(--shadow), 0 0 0 1px rgba(255, 255, 255, 0.05);
       overflow: hidden;
       z-index: 1;
-      border: 1px solid rgba(65, 169, 255, 0.2);
+      border: 1px solid rgba(255, 71, 207, 0.35);
     }
 
     .app::before {
@@ -98,8 +99,8 @@
       position: absolute;
       inset: 0;
       pointer-events: none;
-      background: linear-gradient(120deg, rgba(65, 169, 255, 0.08), transparent 40%),
-        linear-gradient(300deg, rgba(200, 170, 110, 0.08), transparent 50%);
+      background: linear-gradient(120deg, rgba(255, 71, 207, 0.1), transparent 40%),
+        linear-gradient(300deg, rgba(124, 245, 255, 0.08), transparent 50%);
       z-index: 0;
     }
 
@@ -140,7 +141,7 @@
       position: absolute;
       inset: 0;
       background: linear-gradient(180deg, rgba(5, 7, 15, 0.5), rgba(5, 7, 15, 0.9)),
-        url("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1600&q=80") center/cover;
+        url("https://images.unsplash.com/photo-1542751110-97427bbecf20?auto=format&fit=crop&w=1600&q=80") center/cover;
       opacity: 0.2;
       z-index: 0;
       filter: saturate(1.2);
@@ -157,9 +158,9 @@
       display: inline-flex;
       gap: 8px;
       align-items: center;
-      background: rgba(65, 169, 255, 0.12);
+      background: rgba(255, 71, 207, 0.1);
       color: var(--accent);
-      border: 1px solid rgba(65, 169, 255, 0.35);
+      border: 1px solid rgba(255, 71, 207, 0.35);
       padding: 6px 12px;
       border-radius: 999px;
       font-size: 13px;
@@ -203,8 +204,8 @@
     }
 
     .card {
-      background: linear-gradient(180deg, rgba(11, 16, 32, 0.9), rgba(11, 16, 32, 0.78));
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: linear-gradient(180deg, rgba(23, 16, 46, 0.9), rgba(17, 12, 32, 0.8));
+      border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 16px;
       padding: 24px;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 15px 40px var(--card-glow);
@@ -217,18 +218,18 @@
       position: absolute;
       inset: 0;
       pointer-events: none;
-      background: linear-gradient(120deg, rgba(65, 169, 255, 0.08), transparent 40%);
+      background: linear-gradient(120deg, rgba(255, 71, 207, 0.12), transparent 40%);
       opacity: 0.3;
     }
 
     .start-card {
-      background: linear-gradient(180deg, rgba(8, 12, 24, 0.85), rgba(8, 12, 24, 0.78)),
-        url("https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1600&q=80") center/cover;
-      border: 1px solid rgba(200, 170, 110, 0.35);
+      background: linear-gradient(180deg, rgba(11, 7, 20, 0.9), rgba(14, 10, 24, 0.8)),
+        url("https://images.unsplash.com/photo-1550747541-6b3e6a77ae4a?auto=format&fit=crop&w=1600&q=80") center/cover;
+      border: 1px solid rgba(255, 71, 207, 0.35);
     }
 
     .start-card::after {
-      background: linear-gradient(120deg, rgba(200, 170, 110, 0.22), transparent 50%);
+      background: linear-gradient(120deg, rgba(255, 71, 207, 0.22), transparent 50%);
     }
 
     .corner-emote {
@@ -260,18 +261,18 @@
     }
 
     .start-btn {
-      background: linear-gradient(120deg, #0ea5e9, #2563eb);
-      color: #fff;
+      background: linear-gradient(120deg, #ff47cf, #a855f7, #7cf5ff);
+      color: #0b0815;
       min-width: 220px;
-      box-shadow: 0 18px 40px rgba(14, 165, 233, 0.35);
-      border: 1px solid rgba(14, 165, 233, 0.4);
+      box-shadow: 0 18px 40px rgba(255, 71, 207, 0.35);
+      border: 1px solid rgba(255, 71, 207, 0.35);
       text-transform: uppercase;
     }
 
     .start-btn:hover,
     .action-btn:hover {
       transform: translateY(-1px);
-      box-shadow: 0 10px 25px rgba(14, 165, 233, 0.2);
+      box-shadow: 0 10px 25px rgba(255, 71, 207, 0.25);
     }
 
     .answer-btn {
@@ -279,7 +280,7 @@
       background: rgba(255, 255, 255, 0.04);
       color: var(--text);
       text-align: left;
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
       position: relative;
       overflow: hidden;
     }
@@ -288,7 +289,7 @@
       content: "";
       position: absolute;
       inset: 0;
-      background: linear-gradient(120deg, rgba(65, 169, 255, 0.12), transparent 40%);
+      background: linear-gradient(120deg, rgba(255, 71, 207, 0.18), transparent 40%);
       opacity: 0;
       transition: opacity 0.2s ease;
     }
@@ -299,11 +300,11 @@
     }
 
     .answer-btn:hover {
-      background: rgba(65, 169, 255, 0.12);
-      border-color: rgba(65, 169, 255, 0.4);
+      background: rgba(255, 71, 207, 0.14);
+      border-color: rgba(255, 71, 207, 0.45);
       transform: translateY(-1px);
-      box-shadow: 0 15px 32px rgba(65, 169, 255, 0.15);
-      color: #fff;
+      box-shadow: 0 15px 32px rgba(255, 71, 207, 0.2);
+      color: #0b0815;
     }
 
     .answer-btn:hover::before {
@@ -334,9 +335,9 @@
     .meta-pill {
       padding: 6px 10px;
       border-radius: 999px;
-      background: rgba(200, 170, 110, 0.12);
-      border: 1px solid rgba(200, 170, 110, 0.4);
-      color: var(--accent-2);
+      background: rgba(255, 71, 207, 0.12);
+      border: 1px solid rgba(255, 71, 207, 0.4);
+      color: var(--accent);
       font-weight: 700;
       font-size: 12px;
       letter-spacing: 0.6px;
@@ -360,6 +361,30 @@
       font-size: 14px;
     }
 
+    .reaction-layer {
+      position: relative;
+      height: 0;
+      overflow: visible;
+      pointer-events: none;
+    }
+
+    .reaction-bubble {
+      position: absolute;
+      right: 10px;
+      top: -6px;
+      padding: 8px 12px;
+      border-radius: 12px;
+      background: linear-gradient(120deg, rgba(255, 71, 207, 0.85), rgba(124, 245, 255, 0.85));
+      color: #0b0815;
+      font-weight: 800;
+      font-size: 13px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+      transform: translateY(0) scale(0.92);
+      animation: floatPop 1s ease forwards;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      white-space: nowrap;
+    }
+
     .progress-track {
       width: 100%;
       height: 10px;
@@ -372,8 +397,23 @@
     .progress-bar {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, #2563eb, #41a9ff);
+      background: linear-gradient(90deg, #ff47cf, #a855f7, #7cf5ff);
       transition: width 0.25s ease;
+    }
+
+    @keyframes floatPop {
+      0% {
+        opacity: 0;
+        transform: translateY(10px) scale(0.8);
+      }
+      50% {
+        opacity: 1;
+        transform: translateY(-6px) scale(1);
+      }
+      100% {
+        opacity: 0;
+        transform: translateY(-16px) scale(0.98);
+      }
     }
 
     .hidden {
@@ -633,15 +673,15 @@
         <span>Tilt Check</span>
       </div>
       <div class="meme-strip" aria-hidden="true">
-        <span class="meme-chip" style="--i: 0">It's always jung diff</span>
-        <span class="meme-chip" style="--i: 1">We scale</span>
+        <span class="meme-chip" style="--i: 0">jung diff</span>
+        <span class="meme-chip" style="--i: 1">copium cloud</span>
         <span class="meme-chip" style="--i: 2">/mute all tech</span>
         <span class="meme-chip" style="--i: 3">FF? never.</span>
       </div>
       <p>
-        Tag den uvidenskabelige, men 100% præcise tilt-test inspireret af League’s Rift. Svar ærligt, og se om du er en
-        zen-legende, en mildt tiltet soloq grinder eller på direkte vej mod Danger Zone. Klik på et svar for at hoppe
-        videre.
+        Tag den uvidenskabelige, men 100% præcise tilt-test inspireret af League’s Rift – nu i neon meme-mode. Svar
+        ærligt, og se om du er en zen-legende, en mildt tiltet soloq grinder eller på direkte vej mod Danger Zone. Klik
+        på et svar for at hoppe videre, og nyd copium-boblerne på vejen.
       </p>
     </header>
     <main>
@@ -649,7 +689,7 @@
         <img src="https://static.wikia.nocookie.net/leagueoflegends/images/7/7c/Poro_Sad_Emote.png" alt="Sad poro emote" class="corner-emote" />
         <h2>Er du klar til et Rift mood-check?</h2>
         <p style="color: var(--muted); margin: 8px 0 18px;">
-          10 hurtige spørgsmål – ingen data gemmes, kun sjov. Få din tilt-rang og se om du er klar til næste solo queue.
+          11 hurtige spørgsmål – ingen data gemmes, kun sjov. Få din tilt-rang og se om du er klar til næste solo queue.
         </p>
         <button class="start-btn" id="startBtn">Start quiz</button>
       </section>
@@ -657,7 +697,7 @@
       <section id="quiz" class="card hidden" aria-live="polite">
         <div class="question-meta">
           <span class="meta-pill">Summoner check</span>
-          <span id="progressText">Spørgsmål 1 af 8</span>
+          <span id="progressText">Spørgsmål 1 af 11</span>
           <div class="progress-track" aria-hidden="true">
             <div class="progress-bar" id="questionProgress"></div>
           </div>
@@ -675,15 +715,16 @@
             <div class="tilt-bar live" id="liveTiltBar"></div>
           </div>
         </div>
+        <div class="reaction-layer" id="reactionLayer" aria-hidden="true"></div>
       </section>
 
       <section id="result" class="card hidden">
         <div class="result">
           <div>
             <h2>Din tilt-status</h2>
-            <div class="tilt-box">
-              <div class="tilt-label" id="tiltLabel">Zen Gamer</div>
-              <div class="tilt-score" id="tiltScore">Din score: 0/20</div>
+              <div class="tilt-box">
+                <div class="tilt-label" id="tiltLabel">Zen Gamer</div>
+              <div class="tilt-score" id="tiltScore">Din score: 0/22</div>
               <p class="tilt-desc" id="tiltDescription"></p>
               <div class="tilt-track" id="tiltTrack" aria-hidden="true">
                 <div class="tilt-bar" id="tiltBar"></div>
@@ -694,7 +735,7 @@
           <div>
             <h2>Efter kampen</h2>
             <div class="result-visual">
-              <img id="resultImage" src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80" alt="Zen gamer" />
+              <img id="resultImage" src="https://images.unsplash.com/photo-1523906630133-f6934a1ab1b4?auto=format&fit=crop&w=1200&q=80" alt="Zen gamer" />
               <div class="stamp" id="resultStamp">ZEN AF</div>
               <div class="meme-caption" id="memeCaption">inner peace unlocked</div>
             </div>
@@ -777,6 +818,14 @@
         ]
       },
       {
+        text: "Din duo skriver 'lag' men står 0/7/2 Yasuo:",
+        answers: [
+          { text: "Jeg sender et heart emote og går videre", points: 0 },
+          { text: "Jeg smider et '???' ping men prøver at scale", points: 1 },
+          { text: "Jeg streamer det til vennerne som live comedy", points: 2 }
+        ]
+      },
+      {
         text: "Hvilket champ-pick får dit øje til at twitche?",
         answers: [
           { text: "Ingen – jeg er stoisk", points: 0 },
@@ -818,6 +867,7 @@
     const resultStamp = document.getElementById("resultStamp");
     const resultQuote = document.getElementById("resultQuote");
     const memeCaption = document.getElementById("memeCaption");
+    const reactionLayer = document.getElementById("reactionLayer");
 
     let currentQuestion = 0;
     let totalScore = 0;
@@ -825,36 +875,43 @@
 
     const helperMessages = [
       "Pro tip: /mute all er self-care.",
-      "Måske er det faktisk ikke jung diff?", 
+      "Meme det eller dream det – vælg et svar!",
       "Husk at strække fingrene – ingen int clicks.",
-      "Hvis du hover surrender, tænk på LP-tab...", 
-      "Meme build? Kun hvis du er forud!"
+      "Hvis du hover surrender, tænk på LP-tab...",
+      "Spam et dans-emote for RNG-luck!",
+      "Lad være med at tilt-q, du er bedre end det."
     ];
+
+    const reactionTexts = {
+      0: ["ZEN", "cooldown gamer", "breathing.exe"],
+      1: ["copium sips", "ok ok focus", "cope & carry"],
+      2: ["MALDING!", "keyboard smash", "tilt.exe"],
+    };
 
     const categoryVisuals = {
       green: {
-        stamp: "ZEN AF",
-        caption: "inner peace unlocked",
-        image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80",
-        quote: "“Jeg muted all og fik pludselig 200 IQ.” – Dig, meditationsmusik i baggrunden."
+        stamp: "ZEN MODE",
+        caption: "inner peace unlock",
+        image: "https://images.unsplash.com/photo-1523906630133-f6934a1ab1b4?auto=format&fit=crop&w=1200&q=80",
+        quote: "“Muted all, tændte lofi – instant brain buff.” – Dig, ca. 3 sek siden."
       },
       yellow: {
         stamp: "COPIUM",
-        caption: "bare ét game mere",
-        image: "https://images.unsplash.com/photo-1523419400520-224e0c1e1cf5?auto=format&fit=crop&w=1200&q=80",
-        quote: "“Jeg kan stoppe når som helst.” – gamer der er 3 kampe inde i en bo1 revenge arc."
+        caption: "just one more",
+        image: "https://images.unsplash.com/photo-1501004318641-b39e6451bec6?auto=format&fit=crop&w=1200&q=80",
+        quote: "“Jeg kan stoppe når som helst.” – sagde du også i går, og i forgårs."
       },
       orange: {
         stamp: "COPE FLIP",
         caption: "facepalm gaming",
-        image: "https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=1200&q=80",
-        quote: "“Team diff” – mens du selv flash’er væk fra raptors og dør."
+        image: "https://images.unsplash.com/photo-1453749024858-4bca89bd9edc?auto=format&fit=crop&w=1200&q=80",
+        quote: "“Team diff” – sagde du, sekundet før du missclicker flash.”"
       },
       red: {
         stamp: "OMEGA TILT",
-        caption: "keyboard smash", 
-        image: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=1200&q=80",
-        quote: "“Alt er jung diff” – du, mens din controller næsten eksploderer."
+        caption: "keyboard smash",
+        image: "https://images.unsplash.com/photo-1504280390368-3971dc031b15?auto=format&fit=crop&w=1200&q=80",
+        quote: "“Alt er jung diff!” – du, mens tastaturet er i hopla-mode."
       }
     };
 
@@ -893,9 +950,24 @@
       });
     }
 
+    function spawnReaction(points) {
+      if (!reactionLayer) return;
+      const bucket = reactionTexts[Math.min(2, Math.max(0, points))] || [];
+      if (!bucket.length) return;
+
+      const bubble = document.createElement("div");
+      bubble.className = "reaction-bubble";
+      bubble.textContent = bucket[Math.floor(Math.random() * bucket.length)];
+      bubble.style.right = `${10 + Math.random() * 60}px`;
+      bubble.style.transform = `translateY(0) scale(0.92) rotate(${Math.random() * 6 - 3}deg)`;
+      reactionLayer.appendChild(bubble);
+      bubble.addEventListener("animationend", () => bubble.remove());
+    }
+
     function handleAnswer(points) {
       totalScore += points;
       scorePreview.textContent = `Score: ${totalScore}`;
+      spawnReaction(points);
       updateLiveTilt();
       const nextQuestion = currentQuestion + 1;
 
@@ -908,21 +980,21 @@
     }
 
     function getTiltCategory(score) {
-      if (score <= 6) {
+      if (score <= 7) {
         return {
           label: "Zen Gamer",
           desc: "Du er rolig, tager tingene afslappet og lader ikke tilt styre dine valg.",
           color: "green"
         };
       }
-      if (score <= 12) {
+      if (score <= 13) {
         return {
           label: "Mildt tiltet",
           desc: "Du bliver påvirket, men kan stadig styre det. En pause i ny og næ ville ikke skade.",
           color: "yellow"
         };
       }
-      if (score <= 16) {
+      if (score <= 17) {
         return {
           label: "Perma-tiltet",
           desc: "Du tager tingene personligt, og dine nerver er lidt på kanten. Overvej at logge ud og trække vejret.",
