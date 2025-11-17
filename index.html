@@ -11,6 +11,7 @@
       --card-glow: rgba(65, 143, 255, 0.12);
       --accent: #41a9ff;
       --accent-2: #c8aa6e;
+      --accent-3: #6ee7ff;
       --text: #e7edf7;
       --muted: #9db2ce;
       --green: #22c55e;
@@ -18,6 +19,7 @@
       --orange: #fb923c;
       --red: #ef4444;
       --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+      --glass: rgba(255, 255, 255, 0.05);
     }
 
     * {
@@ -27,22 +29,23 @@
     body {
       margin: 0;
       font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
-      background: radial-gradient(circle at 20% 20%, rgba(65, 169, 255, 0.2), transparent 35%),
+      background: radial-gradient(circle at 20% 20%, rgba(65, 169, 255, 0.16), transparent 35%),
         radial-gradient(circle at 75% 0%, rgba(200, 170, 110, 0.2), transparent 30%),
-        radial-gradient(circle at 10% 80%, rgba(76, 29, 149, 0.2), transparent 30%),
+        radial-gradient(circle at 10% 80%, rgba(76, 29, 149, 0.18), transparent 30%),
         var(--bg);
       color: var(--text);
       min-height: 100vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 32px 16px;
+      padding: 32px 16px 42px;
       position: relative;
       overflow: hidden;
     }
 
     body::before,
-    body::after {
+    body::after,
+    body::backdrop {
       content: "";
       position: fixed;
       inset: 0;
@@ -60,9 +63,28 @@
       filter: none;
     }
 
+    .ambient-orb {
+      position: absolute;
+      filter: blur(30px);
+      opacity: 0.55;
+      mix-blend-mode: screen;
+      z-index: 0;
+      animation: float 8s ease-in-out infinite;
+    }
+
+    .orb-1 { width: 220px; height: 220px; background: rgba(65, 169, 255, 0.4); top: 5%; left: 8%; }
+    .orb-2 { width: 260px; height: 260px; background: rgba(236, 72, 153, 0.35); bottom: 10%; right: 8%; animation-delay: 2s; }
+    .orb-3 { width: 180px; height: 180px; background: rgba(200, 170, 110, 0.35); bottom: 25%; left: 18%; animation-delay: 1s; }
+
+    @keyframes float {
+      0% { transform: translateY(0); }
+      50% { transform: translateY(-10px) translateX(6px); }
+      100% { transform: translateY(0); }
+    }
+
     .app {
       position: relative;
-      width: min(960px, 100%);
+      width: min(980px, 100%);
       background: linear-gradient(145deg, rgba(11, 16, 32, 0.94), rgba(8, 12, 24, 0.96));
       border-radius: 22px;
       box-shadow: var(--shadow), 0 0 0 1px rgba(255, 255, 255, 0.04);
@@ -71,11 +93,38 @@
       border: 1px solid rgba(65, 169, 255, 0.2);
     }
 
+    .app::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(120deg, rgba(65, 169, 255, 0.08), transparent 40%),
+        linear-gradient(300deg, rgba(200, 170, 110, 0.08), transparent 50%);
+      z-index: 0;
+    }
+
+    .shimmer-line {
+      position: absolute;
+      top: 0;
+      left: -50%;
+      width: 50%;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.32), transparent);
+      animation: sweep 5s linear infinite;
+      opacity: 0.5;
+    }
+
+    @keyframes sweep {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(200%); }
+    }
+
     header {
-      padding: 32px 28px 8px;
+      padding: 32px 28px 12px;
       text-align: center;
       position: relative;
       overflow: hidden;
+      background: linear-gradient(180deg, rgba(65, 169, 255, 0.08), transparent);
     }
 
     header::after {
@@ -85,6 +134,16 @@
       background: linear-gradient(90deg, rgba(65, 169, 255, 0.14), rgba(200, 170, 110, 0.1));
       opacity: 0.6;
       pointer-events: none;
+    }
+
+    .hero-art {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(5, 7, 15, 0.5), rgba(5, 7, 15, 0.9)),
+        url("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1600&q=80") center/cover;
+      opacity: 0.2;
+      z-index: 0;
+      filter: saturate(1.2);
     }
 
     header h1 {
@@ -117,6 +176,28 @@
       font-size: 16px;
     }
 
+    .meme-strip {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 14px auto 6px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .meme-chip {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 10px;
+      padding: 8px 10px;
+      color: #fff;
+      font-weight: 700;
+      font-size: 13px;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+      transform: rotate(calc(-3deg + 6deg * var(--i)));
+    }
+
     main {
       padding: 12px 24px 28px;
     }
@@ -127,6 +208,38 @@
       border-radius: 16px;
       padding: 24px;
       box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 15px 40px var(--card-glow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(120deg, rgba(65, 169, 255, 0.08), transparent 40%);
+      opacity: 0.3;
+    }
+
+    .start-card {
+      background: linear-gradient(180deg, rgba(8, 12, 24, 0.85), rgba(8, 12, 24, 0.78)),
+        url("https://images.unsplash.com/photo-1511512578047-dfb367046420?auto=format&fit=crop&w=1600&q=80") center/cover;
+      border: 1px solid rgba(200, 170, 110, 0.35);
+    }
+
+    .start-card::after {
+      background: linear-gradient(120deg, rgba(200, 170, 110, 0.22), transparent 50%);
+    }
+
+    .corner-emote {
+      position: absolute;
+      width: 76px;
+      height: 76px;
+      top: -10px;
+      right: 10px;
+      opacity: 0.8;
+      filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.35));
+      transform: rotate(6deg);
     }
 
     .center {
@@ -335,6 +448,48 @@
       letter-spacing: 0.6px;
     }
 
+    .result-visual {
+      position: relative;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+      background: var(--glass);
+    }
+
+    .result-visual img {
+      width: 100%;
+      display: block;
+      object-fit: cover;
+      height: 180px;
+      filter: saturate(1.2);
+    }
+
+    .result-visual .stamp {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(5, 7, 15, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      padding: 6px 12px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .quote-box {
+      margin-top: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      border-radius: 12px;
+      padding: 12px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      color: #dbeafe;
+      font-weight: 600;
+      line-height: 1.5;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
     footer {
       text-align: center;
       padding: 0 0 10px;
@@ -359,13 +514,24 @@
   </style>
 </head>
 <body>
+  <div class="ambient-orb orb-1"></div>
+  <div class="ambient-orb orb-2"></div>
+  <div class="ambient-orb orb-3"></div>
   <div class="app">
+    <div class="shimmer-line" aria-hidden="true"></div>
     <header>
+      <div class="hero-art" aria-hidden="true"></div>
       <h1>How tilted are you?</h1>
       <div class="tagline" aria-hidden="true">
         <span>Rift Ready</span>
         <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--accent);"></span>
         <span>Tilt Check</span>
+      </div>
+      <div class="meme-strip" aria-hidden="true">
+        <span class="meme-chip" style="--i: 0">It's always jung diff</span>
+        <span class="meme-chip" style="--i: 1">We scale</span>
+        <span class="meme-chip" style="--i: 2">/mute all tech</span>
+        <span class="meme-chip" style="--i: 3">FF? never.</span>
       </div>
       <p>
         Tag den uvidenskabelige, men 100% præcise tilt-test inspireret af League’s Rift. Svar ærligt, og se om du er en
@@ -374,10 +540,11 @@
       </p>
     </header>
     <main>
-      <section id="start" class="card center">
+      <section id="start" class="card center start-card">
+        <img src="https://static.wikia.nocookie.net/leagueoflegends/images/7/7c/Poro_Sad_Emote.png" alt="Sad poro emote" class="corner-emote" />
         <h2>Er du klar til et Rift mood-check?</h2>
         <p style="color: var(--muted); margin: 8px 0 18px;">
-          8 hurtige spørgsmål – ingen data gemmes, kun sjov. Få din tilt-rang og se om du er klar til næste solo queue.
+          10 hurtige spørgsmål – ingen data gemmes, kun sjov. Få din tilt-rang og se om du er klar til næste solo queue.
         </p>
         <button class="start-btn" id="startBtn">Start quiz</button>
       </section>
@@ -404,7 +571,7 @@
             <h2>Din tilt-status</h2>
             <div class="tilt-box">
               <div class="tilt-label" id="tiltLabel">Zen Gamer</div>
-              <div class="tilt-score" id="tiltScore">Din score: 0/16</div>
+              <div class="tilt-score" id="tiltScore">Din score: 0/20</div>
               <p class="tilt-desc" id="tiltDescription"></p>
               <div class="tilt-track" aria-hidden="true">
                 <div class="tilt-bar" id="tiltBar"></div>
@@ -413,6 +580,11 @@
           </div>
           <div>
             <h2>Efter kampen</h2>
+            <div class="result-visual">
+              <img id="resultImage" src="https://images.unsplash.com/photo-1521540216272-a50305cd4421?auto=format&fit=crop&w=1200&q=80" alt="Summoner cinematic" />
+              <div class="stamp" id="resultStamp">GG EZ</div>
+            </div>
+            <div class="quote-box" id="resultQuote">“We scale” – alle der har sagt nej til at ff 15.</div>
             <p class="tilt-desc" id="resultText">
               Du er rolig, tager tingene afslappet og lader ikke tilt styre dine valg.
             </p>
@@ -489,6 +661,22 @@
           { text: "Jeg er lidt sur men det går over", points: 1 },
           { text: "Jeg er pissed og tænker på det i lang tid", points: 2 }
         ]
+      },
+      {
+        text: "Hvilket champ-pick får dit øje til at twitche?",
+        answers: [
+          { text: "Ingen – jeg er stoisk", points: 0 },
+          { text: "Teemo top giver mig micro-tilt", points: 1 },
+          { text: "Instalock Yasuo mid = instant mald", points: 2 }
+        ]
+      },
+      {
+        text: "Coach-vennen siger 'just ward better':",
+        answers: [
+          { text: "Jeg griner og køber en pink", points: 0 },
+          { text: "Jeg mumler noget om support diff", points: 1 },
+          { text: "Jeg tilter og spammer pings ved næste brush", points: 2 }
+        ]
       }
     ];
 
@@ -508,10 +696,44 @@
     const tiltDescription = document.getElementById("tiltDescription");
     const tiltBar = document.getElementById("tiltBar");
     const resultText = document.getElementById("resultText");
+    const resultImage = document.getElementById("resultImage");
+    const resultStamp = document.getElementById("resultStamp");
+    const resultQuote = document.getElementById("resultQuote");
 
     let currentQuestion = 0;
     let totalScore = 0;
     const maxScore = questions.length * 2;
+
+    const helperMessages = [
+      "Pro tip: /mute all er self-care.",
+      "Måske er det faktisk ikke jung diff?", 
+      "Husk at strække fingrene – ingen int clicks.",
+      "Hvis du hover surrender, tænk på LP-tab...", 
+      "Meme build? Kun hvis du er forud!"
+    ];
+
+    const categoryVisuals = {
+      green: {
+        stamp: "ZEN",
+        image: "https://images.unsplash.com/photo-1606117330587-0d9c1dc9b355?auto=format&fit=crop&w=1200&q=80",
+        quote: "“GG WP” – dig, efter at have /mute all siden champ select."
+      },
+      yellow: {
+        stamp: "CHILL?",
+        image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80",
+        quote: "“One more for LP back” – famous last words."
+      },
+      orange: {
+        stamp: "PERMA",
+        image: "https://images.unsplash.com/photo-1504274066651-8d31a536b11a?auto=format&fit=crop&w=1200&q=80",
+        quote: "“Team diff” – du, mens du går 0/5/0 på 8 minutter."
+      },
+      red: {
+        stamp: "MALD",
+        image: "https://images.unsplash.com/photo-1505761671935-60b3a7427bad?auto=format&fit=crop&w=1200&q=80",
+        quote: "“All jungle diff” – og din cat spiller måske bedre."
+      }
+    };
 
     function startQuiz() {
       currentQuestion = 0;
@@ -529,6 +751,7 @@
       progressText.textContent = `Spørgsmål ${currentQuestion + 1} af ${questions.length}`;
       const progressPercent = ((currentQuestion) / questions.length) * 100;
       questionProgress.style.width = `${progressPercent}%`;
+      helperText.textContent = helperMessages[currentQuestion % helperMessages.length];
 
       answersContainer.innerHTML = "";
       question.answers.forEach((answer, index) => {
@@ -560,21 +783,21 @@
     }
 
     function getTiltCategory(score) {
-      if (score <= 5) {
+      if (score <= 6) {
         return {
           label: "Zen Gamer",
           desc: "Du er rolig, tager tingene afslappet og lader ikke tilt styre dine valg.",
           color: "green"
         };
       }
-      if (score <= 10) {
+      if (score <= 12) {
         return {
           label: "Mildt tiltet",
           desc: "Du bliver påvirket, men kan stadig styre det. En pause i ny og næ ville ikke skade.",
           color: "yellow"
         };
       }
-      if (score <= 15) {
+      if (score <= 16) {
         return {
           label: "Perma-tiltet",
           desc: "Du tager tingene personligt, og dine nerver er lidt på kanten. Overvej at logge ud og trække vejret.",
@@ -598,6 +821,14 @@
       tiltScore.textContent = `Din score: ${totalScore}/${maxScore}`;
       tiltDescription.textContent = category.desc;
       resultText.textContent = category.desc;
+
+      const visual = categoryVisuals[category.color];
+      if (visual) {
+        resultImage.src = visual.image;
+        resultImage.alt = `${category.label} vibe art`;
+        resultStamp.textContent = visual.stamp;
+        resultQuote.textContent = visual.quote;
+      }
 
       tiltBar.className = `tilt-bar color-${category.color}`;
       const width = Math.min((totalScore / maxScore) * 100, 100);
