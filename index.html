@@ -565,6 +565,24 @@
       text-transform: uppercase;
     }
 
+    .meme-caption {
+      position: absolute;
+      left: 10px;
+      right: 10px;
+      bottom: 8px;
+      background: linear-gradient(90deg, rgba(5, 7, 15, 0.8), rgba(5, 7, 15, 0.65));
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 10px;
+      padding: 8px 10px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      text-align: center;
+      color: #f8fafc;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.35);
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    }
+
     .quote-box {
       margin-top: 12px;
       background: rgba(255, 255, 255, 0.04);
@@ -676,10 +694,11 @@
           <div>
             <h2>Efter kampen</h2>
             <div class="result-visual">
-              <img id="resultImage" src="https://images.unsplash.com/photo-1521540216272-a50305cd4421?auto=format&fit=crop&w=1200&q=80" alt="Summoner cinematic" />
-              <div class="stamp" id="resultStamp">GG EZ</div>
+              <img id="resultImage" src="https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80" alt="Zen gamer" />
+              <div class="stamp" id="resultStamp">ZEN AF</div>
+              <div class="meme-caption" id="memeCaption">inner peace unlocked</div>
             </div>
-            <div class="quote-box" id="resultQuote">“We scale” – alle der har sagt nej til at ff 15.</div>
+            <div class="quote-box" id="resultQuote">“Jeg muted all og fik pludselig 200 IQ.” – Dig, meditationsmusik i baggrunden.</div>
             <p class="tilt-desc" id="resultText">
               Du er rolig, tager tingene afslappet og lader ikke tilt styre dine valg.
             </p>
@@ -798,6 +817,7 @@
     const resultImage = document.getElementById("resultImage");
     const resultStamp = document.getElementById("resultStamp");
     const resultQuote = document.getElementById("resultQuote");
+    const memeCaption = document.getElementById("memeCaption");
 
     let currentQuestion = 0;
     let totalScore = 0;
@@ -813,24 +833,28 @@
 
     const categoryVisuals = {
       green: {
-        stamp: "ZEN",
+        stamp: "ZEN AF",
+        caption: "inner peace unlocked",
         image: "https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80",
-        quote: "“GG WP” – dig, efter at have /mute all siden champ select."
+        quote: "“Jeg muted all og fik pludselig 200 IQ.” – Dig, meditationsmusik i baggrunden."
       },
       yellow: {
-        stamp: "CHILL?",
-        image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=1200&q=80",
-        quote: "“One more for LP back” – famous last words."
+        stamp: "COPIUM",
+        caption: "bare ét game mere",
+        image: "https://images.unsplash.com/photo-1523419400520-224e0c1e1cf5?auto=format&fit=crop&w=1200&q=80",
+        quote: "“Jeg kan stoppe når som helst.” – gamer der er 3 kampe inde i en bo1 revenge arc."
       },
       orange: {
-        stamp: "PERMA",
-        image: "https://images.unsplash.com/photo-1504274066651-8d31a536b11a?auto=format&fit=crop&w=1200&q=80",
-        quote: "“Team diff” – du, mens du går 0/5/0 på 8 minutter."
+        stamp: "COPE FLIP",
+        caption: "facepalm gaming",
+        image: "https://images.unsplash.com/photo-1489515217757-5fd1be406fef?auto=format&fit=crop&w=1200&q=80",
+        quote: "“Team diff” – mens du selv flash’er væk fra raptors og dør."
       },
       red: {
-        stamp: "MALD",
+        stamp: "OMEGA TILT",
+        caption: "keyboard smash", 
         image: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?auto=format&fit=crop&w=1200&q=80",
-        quote: "“All jungle diff” – og din cat spiller måske bedre."
+        quote: "“Alt er jung diff” – du, mens din controller næsten eksploderer."
       }
     };
 
@@ -929,6 +953,7 @@
         resultImage.alt = `${category.label} vibe art`;
         resultStamp.textContent = visual.stamp;
         resultQuote.textContent = visual.quote;
+        memeCaption.textContent = visual.caption || category.label;
       }
 
       tiltBar.className = `tilt-bar color-${category.color}`;
