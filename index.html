@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How tilted are you?</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #111827;
+      --accent: #7c3aed;
+      --text: #e5e7eb;
+      --muted: #94a3b8;
+      --green: #22c55e;
+      --yellow: #facc15;
+      --orange: #fb923c;
+      --red: #ef4444;
+      --shadow: 0 15px 50px rgba(0, 0, 0, 0.35);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+      background: radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.15), transparent 35%),
+        radial-gradient(circle at 80% 0%, rgba(34, 197, 94, 0.15), transparent 25%),
+        var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 32px 16px;
+    }
+
+    .app {
+      width: min(900px, 100%);
+      background: linear-gradient(145deg, rgba(17, 24, 39, 0.9), rgba(15, 23, 42, 0.95));
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    header {
+      padding: 32px 28px 12px;
+      text-align: center;
+    }
+
+    header h1 {
+      margin: 0;
+      font-size: clamp(28px, 4vw, 36px);
+      letter-spacing: 0.5px;
+    }
+
+    header p {
+      margin: 12px auto 0;
+      max-width: 700px;
+      color: var(--muted);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    main {
+      padding: 8px 24px 28px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    }
+
+    .center {
+      text-align: center;
+    }
+
+    .start-btn,
+    .answer-btn,
+    .action-btn {
+      border: none;
+      border-radius: 12px;
+      padding: 14px 16px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
+      font-weight: 600;
+    }
+
+    .start-btn {
+      background: linear-gradient(120deg, #7c3aed, #6366f1);
+      color: #fff;
+      min-width: 220px;
+      box-shadow: 0 10px 30px rgba(124, 58, 237, 0.45);
+    }
+
+    .start-btn:hover,
+    .action-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 25px rgba(124, 58, 237, 0.2);
+    }
+
+    .answer-btn {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text);
+      text-align: left;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .answer-btn:hover {
+      background: rgba(124, 58, 237, 0.12);
+      border-color: rgba(124, 58, 237, 0.3);
+      transform: translateY(-1px);
+    }
+
+    .answer-btn:active {
+      transform: translateY(0);
+      background: rgba(124, 58, 237, 0.18);
+    }
+
+    .stack {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .question-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .question-text {
+      font-size: clamp(18px, 3vw, 22px);
+      margin: 0 0 18px;
+      line-height: 1.5;
+    }
+
+    .nav-row {
+      margin-top: 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #7c3aed, #6366f1);
+      transition: width 0.25s ease;
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    .result {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+      align-items: start;
+    }
+
+    .result h2 {
+      margin: 0 0 6px;
+    }
+
+    .tilt-box {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      padding: 14px;
+      display: grid;
+      gap: 6px;
+    }
+
+    .tilt-score {
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .tilt-label {
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .tilt-desc {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .tilt-track {
+      margin-top: 10px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 999px;
+      overflow: hidden;
+      height: 14px;
+    }
+
+    .tilt-bar {
+      height: 100%;
+      width: 0%;
+      background: var(--green);
+      transition: width 0.35s ease, background 0.35s ease;
+    }
+
+    .color-green { background: var(--green); }
+    .color-yellow { background: var(--yellow); }
+    .color-orange { background: var(--orange); }
+    .color-red { background: var(--red); }
+
+    .action-btn {
+      background: rgba(124, 58, 237, 0.18);
+      color: #fff;
+      border: 1px solid rgba(124, 58, 237, 0.35);
+      padding-inline: 18px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 0 0 10px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    @media (max-width: 520px) {
+      main {
+        padding: 0 16px 20px;
+      }
+
+      .card {
+        padding: 18px;
+      }
+
+      .nav-row {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>How tilted are you?</h1>
+      <p>
+        Tag den uvidenskabelige, men 100% præcise gamer-tilt-test. Svar ærligt på spørgsmålene, og se om du er en
+        zen-legende eller i fuld Danger Zone. Klik på et svar for at hoppe videre.
+      </p>
+    </header>
+    <main>
+      <section id="start" class="card center">
+        <h2>Er du klar til at måle din tilt?</h2>
+        <p style="color: var(--muted); margin: 8px 0 18px;">8 hurtige spørgsmål – ingen data gemmes, kun sjov.</p>
+        <button class="start-btn" id="startBtn">Start quiz</button>
+      </section>
+
+      <section id="quiz" class="card hidden" aria-live="polite">
+        <div class="question-meta">
+          <span id="progressText">Spørgsmål 1 af 8</span>
+          <div class="progress-track" aria-hidden="true">
+            <div class="progress-bar" id="questionProgress"></div>
+          </div>
+        </div>
+        <h2 id="questionText" class="question-text"></h2>
+        <div id="answers" class="stack" role="group" aria-label="Svarmuligheder"></div>
+        <div class="nav-row">
+          <span id="helperText">Vælg et svar for at gå videre.</span>
+          <span id="scorePreview">Score: 0</span>
+        </div>
+      </section>
+
+      <section id="result" class="card hidden">
+        <div class="result">
+          <div>
+            <h2>Din tilt-status</h2>
+            <div class="tilt-box">
+              <div class="tilt-label" id="tiltLabel">Zen Gamer</div>
+              <div class="tilt-score" id="tiltScore">Din score: 0/16</div>
+              <p class="tilt-desc" id="tiltDescription"></p>
+              <div class="tilt-track" aria-hidden="true">
+                <div class="tilt-bar" id="tiltBar"></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <h2>Hvad nu?</h2>
+            <p class="tilt-desc" id="resultText">
+              Du er rolig, tager tingene afslappet og lader ikke tilt styre dine valg.
+            </p>
+            <button class="action-btn" id="retryBtn">Tag testen igen</button>
+          </div>
+        </div>
+      </section>
+    </main>
+    <footer>Bygget i ren HTML, CSS og JavaScript – ingen eksterne frameworks.</footer>
+  </div>
+
+  <script>
+    const questions = [
+      {
+        text: "Din duo int’er level 1. Hvad gør du?",
+        answers: [
+          { text: "Griner og skriver 'its fine'", points: 0 },
+          { text: "Sukker, men spiller videre", points: 1 },
+          { text: "Pinger ham 10 gange og skriver i all chat", points: 2 }
+        ]
+      },
+      {
+        text: "Når du taber en kamp, gør du oftest:",
+        answers: [
+          { text: "Lukker spillet og laver noget andet", points: 0 },
+          { text: "Tager én mere for at vinde LP tilbage", points: 1 },
+          { text: "Spiller 5 games mere selvom du allerede er sur", points: 2 }
+        ]
+      },
+      {
+        text: "Din ping er 120 i ranked:",
+        answers: [
+          { text: "Skifter til noget andet end ranked", points: 0 },
+          { text: "Brokker dig lidt, men spiller videre", points: 1 },
+          { text: "Skyder skylden på internet, Riot og dine teammates", points: 2 }
+        ]
+      },
+      {
+        text: "En teammate skriver ‘report jungler’ efter første dødsfald:",
+        answers: [
+          { text: "Ignorerer chatten", points: 0 },
+          { text: "Øjnene ruller, men du svarer ikke", points: 1 },
+          { text: "Går i fuld debat-mode i chatten", points: 2 }
+        ]
+      },
+      {
+        text: "Hvor ofte alt-tabber du surt ud af et spil?",
+        answers: [
+          { text: "Næsten aldrig", points: 0 },
+          { text: "En gang imellem", points: 1 },
+          { text: "Meget tit", points: 2 }
+        ]
+      },
+      {
+        text: "Når du laver en fejl selv:",
+        answers: [
+          { text: "Griner af det og prøver igen", points: 0 },
+          { text: "Bliver lidt irriteret på dig selv", points: 1 },
+          { text: "Bliver sur og tænker på det resten af spillet", points: 2 }
+        ]
+      },
+      {
+        text: "Hvis en ven int’er i normals:",
+        answers: [
+          { text: "Det er bare sjov, ligegyldigt", points: 0 },
+          { text: "Du driller dem lidt", points: 1 },
+          { text: "Du er oprigtigt irriteret", points: 2 }
+        ]
+      },
+      {
+        text: "Hvordan har du det efter en hård loss-streak?",
+        answers: [
+          { text: "Jeg lukker ned og finder noget afslappende at lave", points: 0 },
+          { text: "Jeg er lidt sur men det går over", points: 1 },
+          { text: "Jeg er pissed og tænker på det i lang tid", points: 2 }
+        ]
+      }
+    ];
+
+    const startSection = document.getElementById("start");
+    const quizSection = document.getElementById("quiz");
+    const resultSection = document.getElementById("result");
+    const startBtn = document.getElementById("startBtn");
+    const retryBtn = document.getElementById("retryBtn");
+    const questionText = document.getElementById("questionText");
+    const answersContainer = document.getElementById("answers");
+    const progressText = document.getElementById("progressText");
+    const questionProgress = document.getElementById("questionProgress");
+    const scorePreview = document.getElementById("scorePreview");
+    const helperText = document.getElementById("helperText");
+    const tiltLabel = document.getElementById("tiltLabel");
+    const tiltScore = document.getElementById("tiltScore");
+    const tiltDescription = document.getElementById("tiltDescription");
+    const tiltBar = document.getElementById("tiltBar");
+    const resultText = document.getElementById("resultText");
+
+    let currentQuestion = 0;
+    let totalScore = 0;
+    const maxScore = questions.length * 2;
+
+    function startQuiz() {
+      currentQuestion = 0;
+      totalScore = 0;
+      scorePreview.textContent = "Score: 0";
+      startSection.classList.add("hidden");
+      resultSection.classList.add("hidden");
+      quizSection.classList.remove("hidden");
+      renderQuestion();
+    }
+
+    function renderQuestion() {
+      const question = questions[currentQuestion];
+      questionText.textContent = question.text;
+      progressText.textContent = `Spørgsmål ${currentQuestion + 1} af ${questions.length}`;
+      const progressPercent = ((currentQuestion) / questions.length) * 100;
+      questionProgress.style.width = `${progressPercent}%`;
+
+      answersContainer.innerHTML = "";
+      question.answers.forEach((answer, index) => {
+        const button = document.createElement("button");
+        button.className = "answer-btn";
+        button.type = "button";
+        button.textContent = answer.text;
+        button.setAttribute("data-points", answer.points);
+        button.setAttribute("aria-label", `${answer.text} (${answer.points} point)`);
+        button.addEventListener("click", () => handleAnswer(answer.points));
+        button.style.transitionDelay = `${index * 20}ms`;
+        answersContainer.appendChild(button);
+      });
+    }
+
+    function handleAnswer(points) {
+      totalScore += points;
+      scorePreview.textContent = `Score: ${totalScore}`;
+      const nextQuestion = currentQuestion + 1;
+
+      if (nextQuestion < questions.length) {
+        currentQuestion = nextQuestion;
+        renderQuestion();
+      } else {
+        showResult();
+      }
+    }
+
+    function getTiltCategory(score) {
+      if (score <= 5) {
+        return {
+          label: "Zen Gamer",
+          desc: "Du er rolig, tager tingene afslappet og lader ikke tilt styre dine valg.",
+          color: "green"
+        };
+      }
+      if (score <= 10) {
+        return {
+          label: "Mildt tiltet",
+          desc: "Du bliver påvirket, men kan stadig styre det. En pause i ny og næ ville ikke skade.",
+          color: "yellow"
+        };
+      }
+      if (score <= 15) {
+        return {
+          label: "Perma-tiltet",
+          desc: "Du tager tingene personligt, og dine nerver er lidt på kanten. Overvej at logge ud og trække vejret.",
+          color: "orange"
+        };
+      }
+      return {
+        label: "Danger Zone",
+        desc: "Alt er jungle diff, og verden er imod dig. Du burde nok røre lidt græs.",
+        color: "red"
+      };
+    }
+
+    function showResult() {
+      quizSection.classList.add("hidden");
+      const progressPercent = 100;
+      questionProgress.style.width = `${progressPercent}%`;
+
+      const category = getTiltCategory(totalScore);
+      tiltLabel.textContent = category.label;
+      tiltScore.textContent = `Din score: ${totalScore}/${maxScore}`;
+      tiltDescription.textContent = category.desc;
+      resultText.textContent = category.desc;
+
+      tiltBar.className = `tilt-bar color-${category.color}`;
+      const width = Math.min((totalScore / maxScore) * 100, 100);
+      tiltBar.style.width = `${width}%`;
+
+      resultSection.classList.remove("hidden");
+    }
+
+    function resetQuiz() {
+      totalScore = 0;
+      currentQuestion = 0;
+      tiltBar.style.width = "0%";
+      tiltBar.className = "tilt-bar";
+      startSection.classList.remove("hidden");
+      quizSection.classList.add("hidden");
+      resultSection.classList.add("hidden");
+    }
+
+    startBtn.addEventListener("click", startQuiz);
+    retryBtn.addEventListener("click", resetQuiz);
+  </script>
+</body>
+</html>
