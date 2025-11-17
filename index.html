@@ -433,9 +433,22 @@
       height: 100%;
       width: 0%;
       background: linear-gradient(90deg, #7f1d1d, #ef4444, #f97316);
-      transition: width 0.35s ease, background 0.35s ease, filter 0.35s ease;
+      transition: width 0.35s ease, background 0.35s ease, filter 0.35s ease, box-shadow 0.35s ease;
       border-radius: 999px;
       box-shadow: 0 0 18px rgba(239, 68, 68, 0.55), 0 6px 18px rgba(0, 0, 0, 0.35);
+    }
+
+    .tilt-bar.live {
+      background: linear-gradient(120deg, #7f1d1d, #dc2626, #ef4444, #f97316);
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.6), 0 0 30px rgba(248, 113, 113, 0.25);
+      animation: pulse 1.4s ease-in-out infinite;
+    }
+
+    .tilt-track.live {
+      margin-top: 14px;
+      height: 14px;
+      padding: 2px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0 0 1px rgba(239, 68, 68, 0.28), 0 0 16px rgba(239, 68, 68, 0.2);
     }
 
     .color-green { filter: saturate(0.65) brightness(1.1); }
@@ -501,6 +514,16 @@
       60% { transform: translateX(-3px); }
       80% { transform: translateX(2px); }
       100% { transform: translateX(0); }
+    }
+
+    @keyframes pulse {
+      0%,
+      100% {
+        filter: drop-shadow(0 0 6px rgba(239, 68, 68, 0.4));
+      }
+      50% {
+        filter: drop-shadow(0 0 10px rgba(248, 113, 113, 0.7));
+      }
     }
 
     .action-btn {
@@ -626,6 +649,13 @@
         <div class="nav-row">
           <span id="helperText">Lock dit valg og hop videre.</span>
           <span id="scorePreview">Score: 0</span>
+        </div>
+        <div class="tilt-box" style="margin-top: 12px;">
+          <div class="tilt-label">Live tilt-meter</div>
+          <div class="tilt-score">Følg din vrede bar i realtime</div>
+          <div class="tilt-track live" id="liveTiltTrack" aria-hidden="true">
+            <div class="tilt-bar live" id="liveTiltBar"></div>
+          </div>
         </div>
       </section>
 
@@ -756,6 +786,8 @@
     const questionProgress = document.getElementById("questionProgress");
     const scorePreview = document.getElementById("scorePreview");
     const helperText = document.getElementById("helperText");
+    const liveTiltBar = document.getElementById("liveTiltBar");
+    const liveTiltTrack = document.getElementById("liveTiltTrack");
     const tiltLabel = document.getElementById("tiltLabel");
     const tiltScore = document.getElementById("tiltScore");
     const tiltDescription = document.getElementById("tiltDescription");
@@ -809,6 +841,7 @@
       startSection.classList.add("hidden");
       resultSection.classList.add("hidden");
       quizSection.classList.remove("hidden");
+      updateLiveTilt();
       renderQuestion();
     }
 
@@ -839,6 +872,7 @@
     function handleAnswer(points) {
       totalScore += points;
       scorePreview.textContent = `Score: ${totalScore}`;
+      updateLiveTilt();
       const nextQuestion = currentQuestion + 1;
 
       if (nextQuestion < questions.length) {
@@ -919,6 +953,15 @@
       startSection.classList.remove("hidden");
       quizSection.classList.add("hidden");
       resultSection.classList.add("hidden");
+      updateLiveTilt();
+    }
+
+    function updateLiveTilt() {
+      if (!liveTiltBar) return;
+      const width = Math.min((totalScore / maxScore) * 100, 100);
+      liveTiltBar.style.width = `${width}%`;
+      liveTiltBar.style.filter = `saturate(${1 + width / 120}) brightness(${1 + width / 220})`;
+      liveTiltTrack.classList.toggle("boom", totalScore >= maxScore);
     }
 
     startBtn.addEventListener("click", startQuiz);
