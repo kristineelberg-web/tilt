@@ -6,16 +6,18 @@
   <title>How tilted are you?</title>
   <style>
     :root {
-      --bg: #0f172a;
-      --card: #111827;
-      --accent: #7c3aed;
-      --text: #e5e7eb;
-      --muted: #94a3b8;
+      --bg: #05070f;
+      --card: #0b1020;
+      --card-glow: rgba(65, 143, 255, 0.12);
+      --accent: #41a9ff;
+      --accent-2: #c8aa6e;
+      --text: #e7edf7;
+      --muted: #9db2ce;
       --green: #22c55e;
       --yellow: #facc15;
       --orange: #fb923c;
       --red: #ef4444;
-      --shadow: 0 15px 50px rgba(0, 0, 0, 0.35);
+      --shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
     }
 
     * {
@@ -25,8 +27,9 @@
     body {
       margin: 0;
       font-family: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
-      background: radial-gradient(circle at 20% 20%, rgba(124, 58, 237, 0.15), transparent 35%),
-        radial-gradient(circle at 80% 0%, rgba(34, 197, 94, 0.15), transparent 25%),
+      background: radial-gradient(circle at 20% 20%, rgba(65, 169, 255, 0.2), transparent 35%),
+        radial-gradient(circle at 75% 0%, rgba(200, 170, 110, 0.2), transparent 30%),
+        radial-gradient(circle at 10% 80%, rgba(76, 29, 149, 0.2), transparent 30%),
         var(--bg);
       color: var(--text);
       min-height: 100vh;
@@ -34,46 +37,96 @@
       align-items: center;
       justify-content: center;
       padding: 32px 16px;
-    }
-
-    .app {
-      width: min(900px, 100%);
-      background: linear-gradient(145deg, rgba(17, 24, 39, 0.9), rgba(15, 23, 42, 0.95));
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 20px;
-      box-shadow: var(--shadow);
+      position: relative;
       overflow: hidden;
     }
 
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle at 30% 40%, rgba(65, 169, 255, 0.14), transparent 28%),
+        radial-gradient(circle at 85% 30%, rgba(200, 170, 110, 0.16), transparent 26%);
+      mix-blend-mode: screen;
+      filter: blur(32px);
+      z-index: 0;
+    }
+
+    body::after {
+      background: repeating-linear-gradient(135deg, rgba(255, 255, 255, 0.04) 0, rgba(255, 255, 255, 0.04) 1px, transparent 1px, transparent 12px);
+      opacity: 0.2;
+      filter: none;
+    }
+
+    .app {
+      position: relative;
+      width: min(960px, 100%);
+      background: linear-gradient(145deg, rgba(11, 16, 32, 0.94), rgba(8, 12, 24, 0.96));
+      border-radius: 22px;
+      box-shadow: var(--shadow), 0 0 0 1px rgba(255, 255, 255, 0.04);
+      overflow: hidden;
+      z-index: 1;
+      border: 1px solid rgba(65, 169, 255, 0.2);
+    }
+
     header {
-      padding: 32px 28px 12px;
+      padding: 32px 28px 8px;
       text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(65, 169, 255, 0.14), rgba(200, 170, 110, 0.1));
+      opacity: 0.6;
+      pointer-events: none;
     }
 
     header h1 {
       margin: 0;
-      font-size: clamp(28px, 4vw, 36px);
-      letter-spacing: 0.5px;
+      font-size: clamp(30px, 4.4vw, 42px);
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+    }
+
+    .tagline {
+      display: inline-flex;
+      gap: 8px;
+      align-items: center;
+      background: rgba(65, 169, 255, 0.12);
+      color: var(--accent);
+      border: 1px solid rgba(65, 169, 255, 0.35);
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 13px;
+      margin-top: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     header p {
-      margin: 12px auto 0;
-      max-width: 700px;
+      margin: 14px auto 0;
+      max-width: 720px;
       color: var(--muted);
       line-height: 1.6;
       font-size: 16px;
     }
 
     main {
-      padding: 8px 24px 28px;
+      padding: 12px 24px 28px;
     }
 
     .card {
-      background: var(--card);
+      background: linear-gradient(180deg, rgba(11, 16, 32, 0.9), rgba(11, 16, 32, 0.78));
       border: 1px solid rgba(255, 255, 255, 0.05);
       border-radius: 16px;
       padding: 24px;
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 15px 40px var(--card-glow);
     }
 
     .center {
@@ -88,40 +141,65 @@
       padding: 14px 16px;
       font-size: 16px;
       cursor: pointer;
-      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease;
-      font-weight: 600;
+      transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.2s ease, border-color 0.2s ease;
+      font-weight: 700;
+      letter-spacing: 0.3px;
     }
 
     .start-btn {
-      background: linear-gradient(120deg, #7c3aed, #6366f1);
+      background: linear-gradient(120deg, #0ea5e9, #2563eb);
       color: #fff;
       min-width: 220px;
-      box-shadow: 0 10px 30px rgba(124, 58, 237, 0.45);
+      box-shadow: 0 18px 40px rgba(14, 165, 233, 0.35);
+      border: 1px solid rgba(14, 165, 233, 0.4);
+      text-transform: uppercase;
     }
 
     .start-btn:hover,
     .action-btn:hover {
       transform: translateY(-1px);
-      box-shadow: 0 10px 25px rgba(124, 58, 237, 0.2);
+      box-shadow: 0 10px 25px rgba(14, 165, 233, 0.2);
     }
 
     .answer-btn {
       width: 100%;
-      background: rgba(255, 255, 255, 0.03);
+      background: rgba(255, 255, 255, 0.04);
       color: var(--text);
       text-align: left;
       border: 1px solid rgba(255, 255, 255, 0.05);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .answer-btn::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(120deg, rgba(65, 169, 255, 0.12), transparent 40%);
+      opacity: 0;
+      transition: opacity 0.2s ease;
+    }
+
+    .answer-btn span {
+      position: relative;
+      z-index: 1;
     }
 
     .answer-btn:hover {
-      background: rgba(124, 58, 237, 0.12);
-      border-color: rgba(124, 58, 237, 0.3);
+      background: rgba(65, 169, 255, 0.12);
+      border-color: rgba(65, 169, 255, 0.4);
       transform: translateY(-1px);
+      box-shadow: 0 15px 32px rgba(65, 169, 255, 0.15);
+      color: #fff;
+    }
+
+    .answer-btn:hover::before {
+      opacity: 1;
     }
 
     .answer-btn:active {
       transform: translateY(0);
-      background: rgba(124, 58, 237, 0.18);
+      background: rgba(65, 169, 255, 0.2);
     }
 
     .stack {
@@ -137,10 +215,23 @@
       margin-bottom: 10px;
       color: var(--muted);
       font-size: 14px;
+      gap: 14px;
+    }
+
+    .meta-pill {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(200, 170, 110, 0.12);
+      border: 1px solid rgba(200, 170, 110, 0.4);
+      color: var(--accent-2);
+      font-weight: 700;
+      font-size: 12px;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
     }
 
     .question-text {
-      font-size: clamp(18px, 3vw, 22px);
+      font-size: clamp(18px, 3vw, 23px);
       margin: 0 0 18px;
       line-height: 1.5;
     }
@@ -162,12 +253,13 @@
       background: rgba(255, 255, 255, 0.06);
       border-radius: 999px;
       overflow: hidden;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
     }
 
     .progress-bar {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, #7c3aed, #6366f1);
+      background: linear-gradient(90deg, #2563eb, #41a9ff);
       transition: width 0.25s ease;
     }
 
@@ -177,20 +269,21 @@
 
     .result {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 18px;
       align-items: start;
     }
 
     .result h2 {
       margin: 0 0 6px;
+      letter-spacing: 0.4px;
     }
 
     .tilt-box {
-      background: rgba(255, 255, 255, 0.03);
+      background: radial-gradient(circle at 20% 20%, rgba(65, 169, 255, 0.08), transparent 45%), rgba(255, 255, 255, 0.02);
       border: 1px solid rgba(255, 255, 255, 0.05);
       border-radius: 12px;
-      padding: 14px;
+      padding: 16px;
       display: grid;
       gap: 6px;
     }
@@ -201,8 +294,9 @@
     }
 
     .tilt-label {
-      font-weight: 700;
-      font-size: 18px;
+      font-weight: 800;
+      font-size: 19px;
+      letter-spacing: 0.5px;
     }
 
     .tilt-desc {
@@ -217,6 +311,7 @@
       border-radius: 999px;
       overflow: hidden;
       height: 14px;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
     }
 
     .tilt-bar {
@@ -232,10 +327,12 @@
     .color-red { background: var(--red); }
 
     .action-btn {
-      background: rgba(124, 58, 237, 0.18);
+      background: rgba(65, 169, 255, 0.16);
       color: #fff;
-      border: 1px solid rgba(124, 58, 237, 0.35);
+      border: 1px solid rgba(65, 169, 255, 0.35);
       padding-inline: 18px;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
     }
 
     footer {
@@ -265,20 +362,29 @@
   <div class="app">
     <header>
       <h1>How tilted are you?</h1>
+      <div class="tagline" aria-hidden="true">
+        <span>Rift Ready</span>
+        <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--accent);"></span>
+        <span>Tilt Check</span>
+      </div>
       <p>
-        Tag den uvidenskabelige, men 100% præcise gamer-tilt-test. Svar ærligt på spørgsmålene, og se om du er en
-        zen-legende eller i fuld Danger Zone. Klik på et svar for at hoppe videre.
+        Tag den uvidenskabelige, men 100% præcise tilt-test inspireret af League’s Rift. Svar ærligt, og se om du er en
+        zen-legende, en mildt tiltet soloq grinder eller på direkte vej mod Danger Zone. Klik på et svar for at hoppe
+        videre.
       </p>
     </header>
     <main>
       <section id="start" class="card center">
-        <h2>Er du klar til at måle din tilt?</h2>
-        <p style="color: var(--muted); margin: 8px 0 18px;">8 hurtige spørgsmål – ingen data gemmes, kun sjov.</p>
+        <h2>Er du klar til et Rift mood-check?</h2>
+        <p style="color: var(--muted); margin: 8px 0 18px;">
+          8 hurtige spørgsmål – ingen data gemmes, kun sjov. Få din tilt-rang og se om du er klar til næste solo queue.
+        </p>
         <button class="start-btn" id="startBtn">Start quiz</button>
       </section>
 
       <section id="quiz" class="card hidden" aria-live="polite">
         <div class="question-meta">
+          <span class="meta-pill">Summoner check</span>
           <span id="progressText">Spørgsmål 1 af 8</span>
           <div class="progress-track" aria-hidden="true">
             <div class="progress-bar" id="questionProgress"></div>
@@ -287,7 +393,7 @@
         <h2 id="questionText" class="question-text"></h2>
         <div id="answers" class="stack" role="group" aria-label="Svarmuligheder"></div>
         <div class="nav-row">
-          <span id="helperText">Vælg et svar for at gå videre.</span>
+          <span id="helperText">Lock dit valg og hop videre.</span>
           <span id="scorePreview">Score: 0</span>
         </div>
       </section>
@@ -306,7 +412,7 @@
             </div>
           </div>
           <div>
-            <h2>Hvad nu?</h2>
+            <h2>Efter kampen</h2>
             <p class="tilt-desc" id="resultText">
               Du er rolig, tager tingene afslappet og lader ikke tilt styre dine valg.
             </p>
@@ -429,7 +535,9 @@
         const button = document.createElement("button");
         button.className = "answer-btn";
         button.type = "button";
-        button.textContent = answer.text;
+        const label = document.createElement("span");
+        label.textContent = answer.text;
+        button.appendChild(label);
         button.setAttribute("data-points", answer.points);
         button.setAttribute("aria-label", `${answer.text} (${answer.points} point)`);
         button.addEventListener("click", () => handleAnswer(answer.points));
